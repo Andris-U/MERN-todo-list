@@ -1,0 +1,17 @@
+{
+  "name": "mern-todo-list",
+  "version": "1.0.0",
+  "description": "Good ol' full stack todo list... but wait! Using Hooks and Context to implement redux-like architecture.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "server": "nodemon server.js"
+  },
+  "author": "Andy",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.4",
+    "mongoose": "^5.4.19",
+    "nodemon": "^1.18.10"
+  }
+}
