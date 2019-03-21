@@ -1,19 +1,40 @@
 import React, { createContext, useReducer } from 'react';
+import uuid from 'uuid';
 
 export const Store = createContext();
 
 const initialState = {
     todos: [
         {
-            text: "Testing tilar sdargvsd;oarbva"
+            id: '1',
+            text: "Testing tilar sdargvsd;oarbva",
+            checked: true
         },
         {
-            text: "Another cool test, yay!"
+            id: '2',
+            text: "Another cool test, yay!",
+            checked: false
         }
-    ]
+    ],
+    modalShow: false
 };
 
-function reducer(state, action) {}
+function reducer(state, action) {
+    switch(action.type) {
+        case 'TOGGLE_CHECKED':
+            return { ...state, todos: state.todos.map(todo => {
+                return todo.id === action.payload ? { ...todo, checked: !todo.checked } : todo;
+            })};
+        case 'ADD_TODO':
+            const newTodo = { id: uuid(), text: action.payload, checked: false };
+            return { ...state, todos: state.todos.concat(newTodo) };
+        case 'DELETE_TODO':
+            const newTodos = state.todos.filter(todo => todo.id !== action.payload);
+            return { ...state, todos: newTodos };
+        default:
+            return state;
+    }
+}
 
 export function StoreProvider(props) {
     const [state, dispatch] = useReducer(reducer, initialState);
