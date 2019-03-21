@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Store } from "./Store";
 
 import './App.css';
@@ -7,17 +7,46 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Todo from "./components/Todo";
 
+
 const App = () => {
     const { state, dispatch } = useContext(Store);
 
+    const fetchDataAction = async () => {
+        const data = await fetch('/api/todos');
+        const dataJSON = await data.json();
+        return  dispatch({ type: 'PULL_TODOS', payload: dataJSON })
+    };
+
+    useEffect(() => {
+        fetchDataAction()
+            .catch(err => console.log(err));
+    }, []);
+
     const todos = state.todos.map( todo => {
-      return <Todo checked={todo.checked} text={todo.text} id={todo.id}/>
+      return (
+          <Todo
+              checked={todo.checked}
+              text={todo.text}
+              id={todo._id}
+              fetchDataAction={fetchDataAction}
+          />
+      )
     });
 
     const handleSubmit = event => {
         event.preventDefault();
-        const text = event.target.todoText.value;
-        dispatch({ type: "ADD_TODO", payload: text })
+        const text = { text: event.target.todoText.value };
+        fetch('/api/todos', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(text)
+        })
+            .then( res => {
+                fetchDataAction();
+            })
+            .catch(err => console.log(err));
         event.target.todoText.value = '';
     };
 

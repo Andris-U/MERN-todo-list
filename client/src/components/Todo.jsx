@@ -6,17 +6,28 @@ const Todo = props => {
     const { dispatch } = useContext(Store);
 
     const handleClick = event => {
-        dispatch({ type: 'TOGGLE_CHECKED', payload: props.id })
+        fetch('/api/todos/' + props.id, {
+            method: 'PUT',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ "checked": props.checked })
+        })
+            .then(() => props.fetchDataAction())
     };
+
     const handleClickDelete = () => {
-        dispatch({ type: 'DELETE_TODO', payload: props.id })
+        fetch('/api/todos/' + props.id, {
+            method: 'DELETE'
+        })
+            .then(() => props.fetchDataAction())
     };
 
     return (
         <ListGroupItem
             variant={props.checked ? 'success' : ''}
             onClick={handleClick}
-            className="justify-content-between list-item"
+            className="justify-content-between"
         >
             <Row>
                 <Col sm={11}>

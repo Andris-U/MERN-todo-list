@@ -4,18 +4,7 @@ import uuid from 'uuid';
 export const Store = createContext();
 
 const initialState = {
-    todos: [
-        {
-            id: '1',
-            text: "Testing tilar sdargvsd;oarbva",
-            checked: true
-        },
-        {
-            id: '2',
-            text: "Another cool test, yay!",
-            checked: false
-        }
-    ],
+    todos: [],
     modalShow: false
 };
 
@@ -27,10 +16,14 @@ function reducer(state, action) {
             })};
         case 'ADD_TODO':
             const newTodo = { id: uuid(), text: action.payload, checked: false };
+
             return { ...state, todos: state.todos.concat(newTodo) };
         case 'DELETE_TODO':
             const newTodos = state.todos.filter(todo => todo.id !== action.payload);
+
             return { ...state, todos: newTodos };
+        case 'PULL_TODOS':
+            return { ...state, todos: action.payload };
         default:
             return state;
     }

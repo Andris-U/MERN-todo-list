@@ -22,4 +22,19 @@ router.post('/', (req, res) => {
         .catch(err => res.json({err}))
 });
 
+// @route  DELETE api/todos
+// @desc   Deletes a todo
+router.delete('/:id', (req, res) => {
+    Todo.findByIdAndDelete(req.params.id)
+        .then(() => res.json({ 'status': 200 }))
+});
+
+// @route  PUT api/todos
+// @desc   Toggles checked property
+router.put('/:id', (req, res) => {
+    Todo.findByIdAndUpdate( req.params.id, { checked: !req.body.checked })
+        .then(res => res.json({ status: 200 }))
+        .catch(err => res.json({ err }))
+});
+
 module.exports = router;
